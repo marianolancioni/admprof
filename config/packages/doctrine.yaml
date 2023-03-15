@@ -6,9 +6,7 @@ doctrine:
                 schema_filter: "~^(?!auditoria|messenger_messages)~"
                 url: '%env(resolve:DATABASE_URL)%'
 
-            iol:
-                charset: AL32UTF8
-                url: '%env(resolve:DATABASE_IOL_URL)%'
+            
 
     orm:
         default_entity_manager: default
@@ -31,14 +29,7 @@ doctrine:
                     string_functions:
                         toUpper: App\DQL\UpperPostgresql
                         toCast: App\DQL\CastPostgresql
-            iol:
-                connection: iol
-                mappings:
-                    iol:
-                        is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity/IOL'
-                        prefix: 'App\Entity\IOL'
-                        alias: iol
+            
 when@test:
     doctrine:
         dbal:
