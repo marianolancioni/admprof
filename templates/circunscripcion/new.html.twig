@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Circunscripcion{% endblock %}
+
+{% block body %}
+    <h1>Nueva Circunscripcion</h1>
+
+    {{ include('circunscripcion/_form.html.twig') }}
+
+    <a href="{{ path('app_circunscripcion_index') }}">back to list</a>
+{% endblock %}

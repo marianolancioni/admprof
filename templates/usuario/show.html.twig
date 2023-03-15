@@ -1,0 +1,53 @@
+    <table class="table shadow">
+        <tbody>
+            <tr>
+                <th>Id:</th>
+                <td>{{ usuario.id }}</td>
+            </tr>
+            <tr>
+                <th>Usuario:</th>
+                <td>{{ usuario.username }}</td>
+            </tr>
+            <tr>
+                <th>Apellido y Nombre:</th>
+                <td>{{ usuario.apellido }} , {{ usuario.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Roles:</th>
+                <td>{{ usuario.roles ? usuario.roles|json_encode | replace({'ROLE_':''}) | replace({'"':''}) | replace({'[':''}) | replace({']':''}) | replace({',':', '}) : '' }}</td>
+            </tr>
+            <tr>
+                <th>Colegio:</th>
+                <td>{{ usuario.colegio }}</td>
+            </tr>
+            <tr>
+                <th>Circunscripción:</th>
+                <td>{{ usuario.circunscripcion }}</td>
+            </tr>
+            <tr>
+                <th>Número Documento:</th>
+                <td>{{ usuario.dni }}</td>
+            </tr>
+            <tr>
+                <th>Correo:</th>
+                <td>{{ usuario.email }}</td>
+            </tr>
+            <tr>
+                <th>Fecha alta:</th>
+                <td>{{ usuario.fechaAlta ? usuario.fechaAlta|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fecha baja:</th>
+                <td>{{ usuario.fechaBaja ? usuario.fechaBaja|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Último acceso:</th>
+                <td>{{ usuario.ultimoAcceso ? usuario.ultimoAcceso|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad de accesos:</th>
+                <td>{{ usuario.cantidadAccesos }}</td>
+            </tr>
+        </tbody>
+    </table>
+

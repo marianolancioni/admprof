@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Administración de Profesionales{% endblock %}</title>
+       
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+             <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
+             <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+             <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script> 
+             <script>
+                $(function () {
+                    // Agrega un * a todos los campos que son requeridos
+                    $('label.required').append('<sup><strong>&nbsp;*</strong></sup>');
+
+                    // Procesa aparición y ocultamiento mensajes tipo flash
+					$(".flashes-messages").hide().delay(1000).fadeIn(150).delay(2000).slideUp(500);
+					$(".flashes-messages-slow").hide().delay(1000).fadeIn(150).delay(10000).slideUp(1000);
+					$(".flashes-messages-closable").hide().delay(1000).fadeIn(150);
+
+                    // Button Top
+                    var btn = $('#buttonTop');
+
+                    $(window).scroll(function() {
+                        if ($(window).scrollTop() > 300) {
+                            btn.addClass('show');
+                        } else {
+                            btn.removeClass('show');
+                        }
+                    });
+
+                    btn.on('click', function(e) {
+                        e.preventDefault();
+                        $('html, body').animate({scrollTop:0}, '300');
+                    });
+                });
+            </script>             
+        {% endblock %}
+
+        {% if app.environment == 'prod' %}
+            <!-- Matomo -->
+            <script>
+                var _paq = window._paq = window._paq || [];
+                /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+                _paq.push(['trackPageView']);
+                _paq.push(['enableLinkTracking']);
+                (function () {
+                    var u = "https://matomosfe.justiciasantafe.gov.ar/";
+                    _paq.push(['setTrackerUrl', u + 'matomo.php']);
+                    _paq.push(['setSiteId', '30']);
+                    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                    g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+                })();
+            </script>
+            <!-- End Matomo Code -->
+        {% endif %}
+    </head>
+
+    <body>
+        <div class="container-fluid">
+
+             {% if is_granted('IS_AUTHENTICATED_FULLY') %} 
+                <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-2">
+                            {#LOGO#}
+                            <a class="navbar-brand"  href="{{ path('app_profesional_index') }}"><img src="{{asset('build/images/escudo.gif')}}" class="rounded float-left" alt="Poder Judicial" height="35" width="38"></a>
+                            {#GRILLA PROFESIONALES#}
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{{ path('app_profesional_index') }}">Gestionar Profesionales</a>
+                            </li>
+                            {#OPCION EXPORTAR#}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_exportado') }}">Exportar</a>
+                                </li>
+                            {% endif %}
+                            {% if is_granted('ROLE_CONSULTOR') or is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_password') }}">Cambiar Clave de Acceso</a>
+                                </li>
+                            {% endif %}
+                            {#DROPDOWN Listados#}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Listados
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                    <a class="dropdown-item" href="{{ path('report_matriculas_index') }}">Listado de Matriculas</a>
+                                    <a class="dropdown-item" href="{{ path('report_asignacionclave_index') }}">Listado de Asignaciones</a>
+                                    <a class="dropdown-item" href="{{ path('report_modificaciones_index') }}">Listado de Modificaciones</a>
+                                    <a class="dropdown-item" href="{{ path('report_matriculas_profesionales_index') }}">Listado de Profesionales</a>
+                                    {% if is_granted('ROLE_ADMIN')%}
+                                        <a class="dropdown-item" href="{{ path('report_claves_profesionales_index') }}">Listado de Claves de Profesionales</a>
+                                        <a class="dropdown-item" href="{{ path('report_colemodificaciones_index') }}">Resumen de Modificaciones y Asignaciones</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" href="{{ path('report_profesional_index') }}">Datos de un Profesional</a>
+                                </ul>
+                            </li>
+                            {#DROPDOWN CONFIGURACIÓN#}
+                            {% if is_granted('ROLE_ADMIN')%}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Configuración
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                        <a class="dropdown-item" href="{{ path('app_colegio_index') }}">Gestionar Colegios</a>
+                                        <a class="dropdown-item" href="{{ path('app_estado_index') }}">Gestionar Estados Profesionales</a>
+                                        <a class="dropdown-item" href="{{ path('app_colegio_circ_index') }}">Gestionar Colegio/Circunscripción</a>
+                                        <a class="dropdown-item" href="{{ path('app_tipo_documento_index') }}">Gestionar Tipos de Documentos</a>
+                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item" href="{{ path('usuario_index') }}">Gestionar Usuarios</a>
+                                        <a class="dropdown-item" href="{{ path('app_auditoria_index') }}">Gestionar Auditoría</a>
+                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item" href="{{ path('app_provincia_index') }}">Gestionar Provincias</a>
+                                        <a class="dropdown-item" href="{{ path('app_circunscripcion_index') }}">Gestionar Circunscripciones</a>
+                                        <a class="dropdown-item" href="{{ path('app_localidad_index') }}">Gestionar Localidades</a>
+                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item" href="{{ path('app_profesional_import') }}">Importar Profesionales desde IOL</a>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                            
+                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                {# USUARIO LOGUEADO #}
+                                {# Manuales de Usuario y Administración en función al Rol#}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    {# Arma una opción Desplegable para agrupar allí los 2 Manuales #}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle me-4" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Manuales del Sistema</a>
+                                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                            <a class="dropdown-item" href="{{asset('build/static/manualUsuario.pdf')}}" target="_blank">Manual de Usuario</a>
+                                            <a class="dropdown-item" href="{{asset('build/static/manualAdministracion.pdf')}}" target="_blank">Manual de Administración</a>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item"><a class="nav-link me-4" href="{{asset('build/static/manualUsuario.pdf')}}" target="_blank">Manual de Usuario</a></li>
+                                {% endif %}
+
+                                {% if is_granted('IS_IMPERSONATOR') %}
+                                    {#USUARIO SUPLANTANDO IDENTIDAD DE OTRO USUARIO #}                                
+                                    <a class="nav-link" href="/profesional?_switch_user=_exit" title="Dejar de Suplantar" style="padding: 0px; color:#DD7;"><i class="fas fa-lg fa-user-secret"></i></a>
+                                    &nbsp;&nbsp;
+                                    <div class="float-lg-right">
+                                        <a class="nav-link" href="/profesional?_switch_user=_exit" title="Dejar de Suplantar" style="font-size: .8rem; padding: 0px; color:#DD7;">
+                                        {{ app.user.getApellido()}}
+                                        {% if app.user.getNombre() %}
+                                            {{ app.user.getNombre() }}
+                                        {% endif %}
+                                        </a>
+                                        <div class="text-right" style="font-size: .6rem; color: #CCC">{{ app.user.getColegio()}} {{ ' ' }} {{ app.user.getCircunscripcion()}} Versión {{ app.session.get('realeaseGit') }}</div>
+                                    </div> 
+                                {% else %}
+                                    {#USUARIO NORMAL#}
+                                    <div class="float-lg-end" style="font-size: .8rem; color: #EEE">
+                                        {{ app.user.getApellido()}}
+                                        {% if app.user.getNombre() %}
+                                            {{ app.user.getNombre() }}
+                                        {% endif %}                                         
+                                         {#VERSION#}
+                                        <div class="text-right" style="font-size: .6rem; color: #CCC">{{ app.user.getColegio()}} {{ ' ' }} {{ app.user.getCircunscripcion()}} Versión {{ app.session.get('realeaseGit') }}</div>
+                                    </div> 
+                                {% endif %}                  
+                            {% endif %}
+
+                            {#BOTOTN SALIR#}
+                            <li class="nav-item w-300">
+                                <a href="{{ path('app_logout') }}"><button type="button" class="btn btn-light ms-5 me-2">Salir</button></a>
+                            </li>
+                        </ul>
+
+
+                    </div>
+                </nav>      
+
+            {% endif %}
+
+            {# Incluyo aca el template de flash messages de la aplicación #}
+            {# Vuelvo a recargar esta parte cada vez que ocurra el evento "success" a nivel de DOM (disparado por modal-form_controller) #}
+            <div {{ stimulus_controller('flashes-messages', {url: path('app_flashes_messages') }) }} data-action="success@window->flashes-messages#refreshMessages">
+                <div data-flashes-messages-target="messages">
+                    {{ include('components/_flashesMessages.html.twig') }}
+                </div>
+                <div data-flashes-messages-target="content">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+
+        </div>
+
+        {# Footer#}
+        <footer class="footer text-center">
+            <br><br>
+            <p>&copy; 2022 <a target="_blank" href="http://www.justiciasantafe.gov.ar/js/index.php"> Poder Judicial de la Provincia de Santa Fe</a> - República Argentina. Todos los derechos reservados
+                {% if app.environment == 'dev' %}
+                    <strong class="text-danger ml-3">TESTING</strong>
+                {% endif %}
+            </p>
+        </footer>
+
+    </body>
+
+</html>

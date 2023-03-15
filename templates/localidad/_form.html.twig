@@ -1,0 +1,30 @@
+{{ form_start(form) }}
+   
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.localidad) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.codigoPostal) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.subCodigoPostal) }}
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.provincia) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.estado) }}
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>
+    <button id="btnSave" class="btn btn-primary float-end shadow">{{ button_label|default('Grabar Cambios') }}</button>
+    
+{{ form_end(form) }}

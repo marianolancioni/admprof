@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TipoDocumento{% endblock %}
+
+{% block body %}
+    <h1>Edit TipoDocumento</h1>
+
+    {{ include('tipo_documento/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_tipo_documento_index') }}">back to list</a>
+
+    {{ include('tipo_documento/_delete_form.html.twig') }}
+{% endblock %}

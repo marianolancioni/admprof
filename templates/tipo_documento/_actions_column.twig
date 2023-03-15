@@ -1,0 +1,36 @@
+{# VER #}
+<div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('app_tipo_documento_show', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+    <a data-action="modal-form#openModal" href="#" title="Ver ficha de {{row.tipoDocumento}}"><i class="fas fa-eye"></i></a>
+
+    {{ include('components/_modal.html.twig', {
+        modalTitle: 'Tipo de Documento: ' ~ row.tipoDocumento,
+    }) }}					
+</div>
+
+{# EDITAR #}
+{% if is_granted('ROLE_SUPER_ADMIN') %} 
+    <div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('app_tipo_documento_edit', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+        <a data-action="modal-form#openModal" href="#" title="Editar a {{row.tipoDocumento}}"><i class="fas fa-pen"></i></a>
+
+        {{ include('components/_modal.html.twig', {
+            modalTitle: 'Tipo de Documento: ' ~ row.tipoDocumento,
+        }) }}					
+    </div>
+{% endif %}
+
+{# BORRAR #}
+{% if is_granted('ROLE_SUPER_ADMIN') %} 
+    <div class="float-end ms-2">
+        <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                    formUrl: path('app_tipo_documento_delete', {id: row.id }), 
+                    textConfirm: '¿Confirma la eliminación del Tipo de Documento "' ~ row.tipoDocumento ~ '"?',
+                    message: 'Esta acción no podrá ser revertida!',
+                    icon: 'warning',
+                    confirmButtonText: 'Si, proceder con la eliminación!',
+                    _method: 'DELETE',
+                    _token: csrf_token('delete' ~ row.id) }) }} 
+                >
+            <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Dar de baja a {{row.tipoDocumento}}"><i class="fa-solid fa-trash-can text-danger"></i></a>      
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestión de Colegios{% endblock %}
+
+{% block body %}
+	<h1>Gestión de Colegios</h1>
+
+	<div class="top-listas">		
+		{% if is_granted('ROLE_ADMIN') %}
+			<div id="botonera-colegio" class="row" style="display: none;">
+				<div class="col-12">
+					<div class="float-end">
+						<div {{ stimulus_controller('modal-form', {formUrl: path('app_colegio_new') }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+							{% if is_granted('ROLE_SUPER_ADMIN')%}
+								<a class="btn btn-primary btn-sm me-1 shadow" data-action="modal-form#openModal">Nuevo Colegio</a>
+                            {% endif %}
+					
+							{{ include('components/_modal.html.twig', {
+								modalTitle: 'Nuevo Colegio',
+							}) }}					
+						</div>						
+					</div>
+				</div>
+			</div>
+		{% endif %}		
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div id="colegioList">
+				<div class="d-flex justify-content-center">
+					<div class="spinner-border m-5" role="status">
+						<span class="sr-only">Cargando...</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		$(function () {
+			
+			var grillaColegios = $('#colegioList').initDataTables( {{ datatable_settings(datatable) }}, {				
+				buttons: [	{
+					extend: 'csv',
+					exportOptions: {
+					columns: [0, 1, 2]
+					},
+				},
+						{
+					extend: 'pdfHtml5',
+					download: 'open',
+					exportOptions: {
+					columns: [0, 1, 2]	
+						}	
+							},
+							{extend: 'print',
+							exportOptions: {
+							columns: [0, 1, 2]	
+								}	}],
+				searching: true,
+				language: {
+					"url": "{{ asset('build/static/traslation_dt_es.json') }}"
+				}
+			}).then(function (dt) {
+				dt.on('init', function(settings, json) {
+					$('#botonera-colegio').show();    
+					$('#dt_filter input').attr("placeholder", "Colegio...");
+					$('#dt_filter input').width(300);                 
+				});
+			});            		
+        });
+	</script>
+
+{% endblock %}

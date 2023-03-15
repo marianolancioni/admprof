@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Auditoría{% endblock %}
+
+{% block body %}
+    <h1>Auditoría</h1>
+
+	<div class="row">
+		<div class="col-12">
+			<div id="app_estadoList">
+				<div class="d-flex justify-content-center">
+					<div class="spinner-border m-5" role="status">
+						<span class="sr-only">Cargando...</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		$(function () {
+			
+			var grillaEstados = $('#app_estadoList').initDataTables( {{ datatable_settings(datatable) }}, {
+				buttons: [],
+				searching: true,
+				language: {
+					"url": "{{ asset('build/static/traslation_dt_es.json') }}"
+				}
+			}).then(function (dt) {
+				dt.on('init', function(settings, json) {
+					$('#dt_filter input').attr("placeholder", "nombre de entidad...");
+					$('#dt_filter input').width(300);                 
+				});
+			});            		
+        });
+	</script>
+
+{% endblock %}

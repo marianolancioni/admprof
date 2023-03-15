@@ -1,0 +1,59 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+
+    {% block body %}
+
+        {# Seteo los titulos del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}  
+        {% endblock %}
+        
+        {% block subtitulo %}
+            {{ labelSubtitutlo }}
+        {% endblock %}
+        
+        {% block subsubtitulo %}
+            {{ labelSubsubtitulo }} 
+        {% endblock %}
+
+        {% block subsubsubtitulo %}
+             <h4> Se listan todos los Profesionales con su matrícula y estado ordenados por apellido.</h4>
+             <h4> Emitido por: {{ app.user.getApellido()}}
+                {% if app.user.getNombre() %}
+                    {{ app.user.getNombre() }}
+                {% endif %}
+            </h4>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+       
+        {% if profesionales != null %}
+            <table class="table table-stripedpdf">
+                <thead class="table-bordered">
+                    <tr>
+                        <th rowspan="2" class="apellido-nombre">Apellido y Nombre</th>
+                        <th rowspan="2" class="text-center">Matrícula</th>
+                        <th rowspan="2" class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profesional in profesionales %}
+                        <tr class="no-gutters">
+                            <td class="apellido-nombre" nowrap>{{ profesional.apellido ~ ', '  ~ profesional.nombre }}</td>
+                            <td class="text-center">{{ profesional.matricula }}</td>
+                            <td class="text-center">{{ profesional.estadoProfesional }}</td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+            <h4>Cantidad de Profesionales: {{cantidadTotal}}</h4>
+        {% else %}
+            <p>No se encuentran profesionales para el Colegio y Circunscripción.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

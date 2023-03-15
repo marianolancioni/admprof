@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Reporte de Colegios con Modificaciones y Asignaciones{% endblock %}
+
+{% block body %}
+
+<div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+    <div class="container h-100">
+        <div class="row align-items-center h-100">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Resumen de Modificaciones y Asignaciones por Colegios</h5>
+                    <p>Se generará el listado con los siguientes filtros:</p>
+                <form method="post" action="{{ path('report_colemodificaciones_generar') }}">                     
+                    <label for="desdeFecha" id="lbldesdeFecha">Fecha Modificación desde: </label>
+                    <input name="fDesde" type="date" required="required" value={{hoy}} /> <br>  <br>  
+
+                    <label for="hastaFecha" id="lblhastaFecha">Fecha Modificación hasta: </label> 
+                    <input name="fHasta" type="date" required="required" value={{hoy}} /> <br>  <br> 
+
+                    <br>
+                     {#BOTON IMPRIMIR#}
+                    <button class="btn btn-lg btn-primary float-end shadow px-2">{{ button_label|default('Imprimir') }}</button>  
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){            
+            $('#lbldesdeFecha').focus();
+        }); 
+    </script>  
+    
+{% endblock %}   

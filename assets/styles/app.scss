@@ -1,0 +1,10 @@
+@import "~bootstrap/scss/functions";
+
+$primary: rgb(18, 71, 18); // Customiza algunos colores de Bootstrap
+
+@import '~bootstrap/scss/bootstrap';
+@import '../styles/app.css';
+@import "~@fortawesome/fontawesome-free/css/all.css"; 
+@import '~datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+@import '~sweetalert2/src/sweetalert2.scss';
+@import 'animate.css';

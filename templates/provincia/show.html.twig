@@ -1,0 +1,23 @@
+    <table class="table shadow">
+        <tbody>
+            <tr>
+                <th>Código:</th>
+                <td>{{ provincia.id }}</td>
+            </tr>
+            <tr>
+                <th>Provincia:</th>
+                <td>{{ provincia.provincia }}</td>
+            </tr>
+            {#Para el campo Estado el FALSE or 0: Habilitado y el TRUE or 1: Deshabilitado#}
+            <tr>
+                <th>Estado:</th>
+                <td>
+                    {% if provincia.estado == true %}
+                        1 - Deshabilitado
+                    {% else %}
+                        0 - Habilitado
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>

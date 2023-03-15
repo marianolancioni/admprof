@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exportación de Datos{% endblock %}
+
+{% block body %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') and (is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN')) %} 
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Exportación de Datos</h5>
+
+                        <p>Se exportarán los datos con los siguientes filtros:</p>
+
+                        <form method="post" action="{{ path('exportado_genera') }}">
+                        
+                                <label for="cboCircunscripcion" id="lblCircunscripcion">Seleccione una Circunscripción:</label><br>
+                                <select class="form-control" id="cboCircunscripcion" name="circunscripcion">
+                                    {# Dependiendo si el usuario logueado tiene seteada la circunscripción o no decido que mostrar en este combo #}
+                                    {% if app.user.getCircunscripcion() %}            
+                                        <option value={{ app.user.getCircunscripcion().getId() }} selected>{{ app.user.getCircunscripcion() }}</option>                              
+                                    {% else %}
+                                        <option value="0" selected>TODAS</option>
+                                        {% for t in  circunscripciones %}
+                                            <option value="{{t.id}}">{{t.circunscripcion}}</option>
+                                        {% endfor %}
+                                    {% endif %}                        
+                                </select>
+                                <br> 
+                                <label for="cboColegio" id="lblColegio">Seleccione un Colegio:</label><br>
+                                <select class="form-control" id="cboColegio" name="colegio">
+                                    {# Dependiendo si el usuario logueado tiene seteada la circunscripción o no decido que mostrar en este combo #}
+                                    {% if app.user.getColegio() %}            
+                                        <option value={{ app.user.getColegio().getId() }} selected>{{ app.user.getColegio() }}</option>                              
+                                    {% else %}
+                                        {% for h in  colegios %}
+                                            <option value="{{h.id}}">{{h.colegio}}</option>
+                                        {% endfor %}
+                                        <option value="99" selected>TODOS</option>       
+                                    {% endif %}                    
+                                </select>                 
+                                <br> 
+                        
+                            
+                            <label for="desdeFecha" id="lbldesdeFecha">Novedades desde: </label> <br> 
+                            <input name="fDesde" type="date"  title="Filtra los profesionales modificados después de esta fecha"/> <br>  <br> 
+                           {# <input name="cbidbf" type="checkbox" title="Marcar para generar DBF, desmarcar para CSV" checked/>  DBF . <br>>#}
+                            <label for="cboformato" id="lblformato">Seleccione Formato Archivo:</label>
+                            <select class="form-control" id="cboformato" name="cbidbf">                                      
+                                    <option value="" selected>Extensión .CSV</option> 
+                                    <option value="True"  selected>Extensión .DBF</option>                     
+                            </select>
+                            {#<input name="cbclave" type="checkbox" title="Marcar para generar colpassw, desmarcar para colegio"/>  CLAVES  .<br>#}
+                            <br>
+                            <label for="cboclave" id="lblclave">Seleccione Información a Exportar:</label>
+                            <select class="form-control" id="cboclave" name="cbclave">                                     
+                                    <option value="True"  selected>Claves</option>
+                                    <option value="" selected>Profesionales</option>                                                           
+                            </select>
+                            <br>
+                            <center>
+                                <a class="btn btn-secondary float-start shadow volver" href="{{ path('app_profesional_index') }}">Cancelar</a>
+                                <button class="btn btn-lg btn-primary float-end shadow px-2">{{ button_label|default('Exportar') }}</button>
+                            </center>   
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+    {% endif %} 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){            
+            $('#cboCircunscripcion').focus();
+        }); 
+    </script>  
+    
+{% endblock %}   

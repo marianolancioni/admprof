@@ -1,0 +1,58 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo el titulo del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {# Seteo el subtitulo del reporte con el colegio y la circunscripcion #}
+        {% block subsubtitulo %}
+           <p>Colegio:  {{ labelColegio }} </p>
+           <p>Circunscripción:  {{ labelCircu }} </p>
+        {% endblock %}
+
+        {% block subsubsubtitulo %}
+            <h4 class="alinearizq"> Desde: {{labelFechaDesde|date('d/m/Y') }} Hasta: {{ labelFechaHasta|date('d/m/Y') }}</h4>        
+            <h4 class="alinearder">
+                Emitido por: {{ app.user.getApellido()}}
+                    {% if app.user.getNombre() %}
+                        {{ app.user.getNombre() }}
+                    {% endif %}
+            </h4>
+            <div style="clear: both;"></div>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        {% if profesionales != null %}
+        <table class="table table-striped">
+            <thead class="table-bordered">
+                <tr>
+                    <th rowspan="2" class="apellido-nombre">Apellido y Nombre</th>
+                    <th rowspan="2" class="text-center">Matricula</th>
+                    <th rowspan="2" class="text-center">Fecha Alta</th>
+                    <th rowspan="2" class="text-center">Fecha Última Asign. Clave</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profesional in profesionales %}
+                    <tr class="no-gutters">
+                        <td class="apellido-nombre" nowrap>{{ profesional.apellido ~ ', '  ~ profesional.nombre }}</td>
+                        <td class="text-center">{{ profesional.matricula }}</td>
+                        <td class="text-center">{{ profesional.fechaAlta ? profesional.fechaAlta|date('d/m/Y H:i') : ''  }}</td>
+                        <td class="text-center">{{ profesional.fechaClave ? profesional.fechaClave|date('d/m/Y H:i') : ''  }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4>Total de Asignaciones: {{profesionales | length}}</h4>
+        {% else %}
+            <p>No se encuentran profesionales con asignación de clave para el rango de fechas seleccionado.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

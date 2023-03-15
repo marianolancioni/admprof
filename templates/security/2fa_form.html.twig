@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    
+    {# Authentication errors #}
+    {% if authenticationError %}
+        <div class="alert alert-danger"><p>{{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}</p></div>
+    {% endif %}
+
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+            <div class="container h-100">
+                <div class="row align-items-center h-100">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Segundo paso para ingresar al sistema</h5>
+                            <p class="label"><label for="_auth_code">Ingrese el código de 4 dígitos que le llegó al correo:  {{ app.user.getEmail() }} </label></p>
+                            <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="_auth_code">Código: </label>
+                                        <input type="text" name="{{ authCodeParameterName }}" id="_auth_code" autocomplete="one-time-code" required autofocus>
+                                    </div>
+                                </div>
+                                <p></p>
+                                {% if displayTrustedOption %}
+                                    <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> {{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label></p>
+                                {% endif %}
+                                {% if isCsrfProtectionEnabled %}
+                                    <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                                {% endif %}
+                                {# BOTON INGRESAR DEFAULT#}
+                                <p></p>
+                                {# <p class="submit"><input type="submit" value="{{ "login"|trans({}, 'SchebTwoFactorBundle') }}" /></p> #}
+                                <button class="btn btn-lg btn-primary float-end shadow px-2" type="submit" value="{{ "login"|trans({}, 'SchebTwoFactorBundle') }}">Ingresar</button>
+                            </form>
+                            {# BOTON CANCELAR DEFAULT #}
+                            {# <p class="cancel"><a href="{{ logoutPath }}">{{ "cancel"|trans({}, 'SchebTwoFactorBundle') }}</a></p> #}
+                            <a href="{{ path('app_logout') }}"><button class="btn btn-lg btn-secondary float-start shadow px-2" type="camcel" value="{{ "cancel"|trans({}, 'SchebTwoFactorBundle') }}">Cancelar</button></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

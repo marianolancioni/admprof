@@ -1,0 +1,28 @@
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     '%env(WKHTMLTOPDF_PATH)%'
+        options:    
+            enable-local-file-access: true
+            page-size: LEGAL
+            margin-top: 30
+            margin-bottom: 15
+            margin-right: 4
+            margin-left: 6
+            header-line: true
+            header-spacing: 5     
+            header-right: ''       
+            header-html: '%kernel.project_dir%/public/build/static/headerPDFList.html'
+            header-font-size: 8
+            footer-line: true
+            footer-spacing: 5
+            footer-left: 'Emitido el [date] [time]'
+            footer-right: 'Hoja [page]/[toPage]'
+            footer-font-size: 8
+            encoding: 'UTF-8'
+    image:
+        enabled:    true
+        binary:     '%env(WKHTMLTOIMAGE_PATH)%'
+        options:
+            enable-local-file-access: true
+            encoding: 'UTF-8'

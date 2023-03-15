@@ -1,0 +1,49 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo los titulos del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {% block subtitulo %}
+            {{ labelSubtitutlo }}
+        {% endblock %}
+        
+        {% block subsubtitulo %}
+            {{ labelSubsubtitulo }}
+        {% endblock %}
+
+        {% block subsubsubtitulo %}
+             <h4> Emitido por: {{ app.user.getApellido()}}
+                {% if app.user.getNombre() %}
+                    {{ app.user.getNombre() }}
+                {% endif %}
+            </h4>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        
+        {% if profesional != null %}
+            <br><br>
+            <p><b>Apellido y Nombre:</b> {{ profesional.apellido ~ ', '  ~ profesional.nombre }}</p>
+            <p><b>Matricula:</b> {{ profesional.matricula }}</p>
+            <p><b>Tipo Documento:</b> {{ profesional.tipoDocumento }}</p>
+            <p><b>Número Documento:</b> {{ profesional.numeroDocumento }}</p>
+            <p><b>Fecha Alta:</b> {{ profesional.fechaAlta ? profesional.fechaAlta|date('d/m/Y') : ''  }} </p>
+            <p><b>Tiene Clave asignada:</b> {{ profesional.clave ? 'SI' : 'NO' }} </p>
+            <p><b>Fecha Actualización clave:</b> {{ profesional.fechaClave ? profesional.fechaClave|date('d/m/Y') : '' }} </p>
+            <p><b>Domicilio:</b> {{ profesional.domicilio  ~ ', '  ~ profesional.localidad}} </p>
+            <p><b>Teléfono:</b> {{ profesional.telefono1 }}</p>
+            <p><b>Teléfono Alternativo:</b> {{ profesional.telefono2 }}</p>
+            <p><b>Correo:</b> {{ profesional.correo }}</p>
+        {% else %} 
+            <p>No se ha encontrado profesional con esa matrícula</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

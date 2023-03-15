@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+    {{ form_widget(form)}}
+
+    <button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>
+    <button id="btnSave" class="btn btn-primary float-end shadow">{{ button_label|default('Grabar Cambios') }}</button>
+
+{{ form_end(form) }}

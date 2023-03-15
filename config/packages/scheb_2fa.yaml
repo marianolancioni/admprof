@@ -1,0 +1,21 @@
+# See the configuration reference at https://symfony.com/bundles/SchebTwoFactorBundle/6.x/configuration.html
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+        - Acme\AuthenticationBundle\Token\CustomAuthenticationToken
+
+    # Email authentication config
+    email:
+        enabled: true                  # If email authentication should be enabled, default false
+        sender_email: informatica@justiciasantafe.gov.ar   # Sender email address
+        sender_name: Secretaria de Informatica del PJSF    # Sender name
+        digits: 4                      # Number of digits in authentication code
+        template: security/2fa_form.html.twig # Custom Template
+        mailer: auth_mailer
+
+    trusted_device:
+        enabled: true                 # If the trusted device feature should be enabled
+        lifetime: 5184000              # Lifetime of the trusted device token (5184000 = 60 días)
+        extend_lifetime: false         # Automatically extend lifetime of the trusted cookie on re-login
+        cookie_name: trusted_device    # Name of the trusted device cookie

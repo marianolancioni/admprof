@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administración de Profesionales{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Listado de Matrículas por Fecha de Creación</h5>
+                        <p>Se generará el listado con los siguientes filtros:</p>
+                        <form method="post" action="{{ path('report_matriculas_generar') }}">
+                            {#CBO CIRCUNSCRIPCIONES#}
+                            <br>
+                            <label for="cboCircunscripcion" id="lblCircunscripcion">Circunscripción:</label>
+                            <select class="form-control" id="circunscripcion" name="circunscripcion">            
+                            {% if app.user.getCircunscripcion() %} 
+                                    <option value={{ app.user.getCircunscripcion().getId() }}>{{ app.user.getCircunscripcion() }}</option>
+                            {% else %}
+                                <option value=0 selected>TODAS</option>
+                                {% for c in  circunscripciones %}
+                                    <option value="{{c.id}}">{{c.circunscripcion}}</option>
+                                {% endfor %}
+                            {% endif %}
+                            </select>
+                            {#CBO COLEGIO#}
+                            <br>
+                            <label for="cboColegio" id="lblColegio">Colegio:</label>
+                            <select class="form-control" id="colegio" name="colegio">            
+                            {% if app.user.getColegio() %}            
+                                <option value={{ app.user.getColegio().getId() }} selected>{{ app.user.getColegio() }}</option>                              
+                            {% else %}
+                                <option value=99 selected>TODOS</option>       
+                                 {% for h in  colegios %}
+                                    <option value="{{h.id}}">{{h.colegio}}</option>
+                                {% endfor %}
+                            {% endif %}   
+                            </select>
+                            {#SELECTOR FECHAS#}
+                            <br>
+                            <label for="txtFechaDesde" id="lblDesde">Fecha Alta Matrícula Desde:</label>
+                            <input type="date" id="txtFechaDesde" name="start" required="required" value={{hoy}} />
+                            <br><br>
+                            <label for="txtFechaHasta" id="lblHasta">Fecha Alta Matrícula Hasta:</label>
+                            <input type="date" id="txtFechaHasta" name="end" required="required" value={{hoy}} />
+                            <br>
+                            {#BOTON GENERAR#}
+                            <button class="btn btn-lg btn-primary float-end shadow px-2" type="submit">{{ button_label|default('Imprimir') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){            
+            $('#circunscripcion').focus();
+        }); 
+    </script>  
+    
+{% endblock %}    

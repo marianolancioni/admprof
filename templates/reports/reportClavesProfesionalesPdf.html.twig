@@ -1,0 +1,60 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo el titulo del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {# Seteo el subtitulo del reporte con el colegio y la circunscripcion #}
+        {% block subsubtitulo %}
+           <p>Colegio:  {{ labelColegio }} </p>
+           <p>Circunscripción:  {{ labelCircu }} </p>   
+        {% endblock %}
+        {% block subsubsubtitulo %}
+        <h4> Desde: {{labelFechaDesde|date('d/m/Y') }}  Hasta: {{ labelFechaHasta|date('d/m/Y') }} </h4>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        {% if profesionales != null %}
+        <table class="table table-striped">
+            <thead class="table-bordered">
+                <tr>
+                    <th rowspan="2" class="apellido-nombre">Apellido y Nombre</th>
+                    <th rowspan="2" class="text-center">Matricula</th>
+                    <th rowspan="2" class="text-center">Fecha Asignación</th>
+                    <th rowspan="2" class="text-center">Estado</th>
+                    <th rowspan="2" class="text-center">Clave</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profesional in profesionales %}
+                    {% set clave = profesionalService.encrypt_decrypt('decrypt', profesional.clave) %}
+                    <tr class="no-gutters">
+                        <td class="apellido-nombre" nowrap>{{ profesional.apellido ~ ', '  ~ profesional.nombre }}</td>
+                        <td class="text-center">{{ profesional.matricula }}</td>
+                        <td class="text-center">{{ profesional.fechaClave ? profesional.fechaClave|date('d/m/Y H:i') : ''  }}</td>
+                        <td class="text-center">{{ profesional.estadoProfesional }}</td>
+                        {% if clave %}
+                            <td class="text-center">{{ clave }}</td>
+                        {% else %}
+                            <td class="text-center"></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <h3>Cantidad de Profesionales Listados: {{ profesionales |length }}</h3>
+
+        {% else %}
+            <p>No se encuentran asignaciones de claves a profesionales para el rango de fechas seleccionado.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

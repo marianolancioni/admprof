@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestión de Usuario{% endblock %}
+
+{% block body %}
+	<h1>Gestión de Usuarios</h1>
+
+	<div class="top-listas">		
+		{% if is_granted('ROLE_ADMIN') %}
+			<div id="botonera-usuario" class="row" style="display: none;">
+				<div class="col-12 mt-3 mb-2">
+					<div class="row">
+						<div class="col-8">	
+							<div class="row g-2">
+								<div class="col-auto">
+									<label for="cbx_estado_usuario" class="col-form-label">Usuarios:</label>
+								</div>
+								<div class="col-auto float-left datatables-filter">
+									<select id="cbx_estado_usuario" name="cbx_estado_usuario" class="form-control form-control-sm text-secondary">
+										<option value="2"{{ (filtroEstadoUsuario == 2) ? 'selected' : '' }}>Con Baja Lógica</option>
+										<option value="1"{{ (filtroEstadoUsuario == 1) ? 'selected' : '' }}>Activos</option>
+										<option value="0"{{ (filtroEstadoUsuario == 0) ? 'selected' : '' }}>Todos</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-4">
+							<div class="float-end">
+								<div {{ stimulus_controller('modal-form', {formUrl: path('usuario_new') }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+									{% if is_granted('ROLE_SUPER_ADMIN') %}
+										<a class="btn btn-primary btn-sm me-1 shadow" data-action="modal-form#openModal">Nuevo Usuario</a>
+									{% endif %}
+						
+									{{ include('components/_modal.html.twig', {
+										modalTitle: 'Nuevo Usuario',
+									}) }}					
+								</div>						
+							</div>
+							{# Reset Trusted Device - Vuelve a Solicitar ingreso de código 2FA #}
+							<div class="me-4 float-end" {{ stimulus_controller('confirm-form', {
+									formUrl: path('usuario_trust_version_all'), 
+									textConfirm: '¿Volver a solicitar a TODOS los usuarios un pin para autenticación de doble factor"?',
+									message: 'Si procede, se le solicitará a TODOS los usuarios un pin de ingreso la próxima vez que ingrese al Sistema.',
+									icon: 'warning',
+									confirmButtonText: 'Si, proceder para todos los usuarios!',
+									_method: 'POST',
+									_token: csrf_token('trustAll') }) }} 
+							>
+								{% if is_granted('ROLE_SUPER_ADMIN') %}
+									<a class="btn btn-primary btn-sm me-24 shadow" data-action="confirm-form#deleteUndeleteConfirm" title="Volver a solicitar pin de autenticación de 2FA a '{{'row.username'}}'">Forzar Autenticación 2FA a todos los Usuarios</a>
+								{% endif %}
+							</div>  
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}		
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div id="usuarioList">
+				<div class="d-flex justify-content-center">
+					<div class="spinner-border m-5" role="status">
+						<span class="sr-only">Cargando...</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		$(function () {
+			
+			var grillaUsuarios = $('#usuarioList').initDataTables( {{ datatable_settings(datatable) }}, {
+				buttons: [],
+				searching: true,
+				language: {
+					"url": "{{ asset('build/static/traslation_dt_es.json') }}"
+				}
+			}).then(function (dt) {
+				dt.on('init', function(settings, json) {
+					$('#botonera-usuario').show();    
+					$('#dt_filter input').attr("placeholder", "Usuario, Apellido, Nombre...");
+					$('#dt_filter input').width(300);                 
+				});
+			});  
+			
+            /***************
+            ** EVENTOS JS **
+            ****************/
+            // Tomo el cambio en el combo del filtro por Estado del Usuario
+            $('#cbx_estado_usuario').change(function() {                
+                location.href = Routing.generate('usuario_index', {filtroEstadoUsuario: $(this).val()});                
+            });
+
+        });
+	</script>
+
+{% endblock %}

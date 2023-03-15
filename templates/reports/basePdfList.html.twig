@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+                
+        {% block stylesheets %}
+            {% for file in encore_entry_css_files('app') %}
+                <link href="{{ absolute_url(asset(file)) }}" rel="stylesheet" />
+            {% endfor %}
+    	{% endblock %}
+    
+    </head>
+
+    <body>
+        <div class="container pdfList">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>{% block titulo %}{% endblock %}</h1>
+                    <h2>{% block subtitulo %}{% endblock %}</h2>
+                    <h3>{% block subsubtitulo %}{% endblock %}</h3>
+                    <p>{% block subsubsubtitulo %}{% endblock %}</p>
+                    {% block contenido %}Contenido del Informe{% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

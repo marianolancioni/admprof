@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administración de Profesionales{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Listado de Profesionales para un Colegio y Circunscripción</h5>
+                        <p>Se generará el listado con los siguientes filtros:</p>
+                        <form method="post" action="{{ path('report_matriculas_profesionales_generar') }}">
+                            {#CBO CIRCUNSCRIPCIONES#}
+                            <br>
+                            <label for="cboCircunscripcion" id="lblCircunscripcion">Circunscripción:</label>
+                            <select class="form-control" id="circunscripcion" name="circunscripcion">            
+                            {% if app.user.getCircunscripcion() %} 
+                                    <option value={{ app.user.getCircunscripcion().getId() }}>{{ app.user.getCircunscripcion() }}</option>
+                            {% else %}
+                                {% for c in  circunscripciones %}
+                                    <option value="{{c.id}}">{{c.circunscripcion}}</option>
+                                {% endfor %}
+                            {% endif %}
+                            </select>
+                            {#CBO COLEGIO#}
+                            <br>
+                            <label for="cboColegio" id="lblColegio">Colegio:</label>
+                            <select class="form-control" id="colegio" name="colegio">            
+                            {% if app.user.getColegio() %}            
+                                <option value={{ app.user.getColegio().getId() }} selected>{{ app.user.getColegio() }}</option>                              
+                            {% else %} 
+                                 {% for h in  colegios %}
+                                    <option value="{{h.id}}">{{h.colegio}}</option>
+                                {% endfor %}
+                            {% endif %}   
+                            </select>
+                            <br>
+                            {#BOTON GENERAR#}
+                            <button class="btn btn-lg btn-primary float-end shadow px-2" type="submit">{{ button_label|default('Imprimir') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){            
+            $('#circunscripcion').focus();
+        }); 
+    </script>  
+    
+{% endblock %}    

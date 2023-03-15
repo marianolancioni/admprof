@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exportación de Datos{% endblock %}
+
+{% block body %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %} 
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Exportación de Datos</h5>
+                       
+
+                <form method="post" action="{{ path('exportado_descarga') }}">                  
+                    <br>
+                     {% if fdesde  %}
+                        <h5>Novedades Desde Fecha: {{fdesde}}</h5>
+                     {% endif %}   
+                    <br> 
+                    <h5>{{exporta}}</h5>
+                    {% if esdbf  %}
+                        <h5>Formato del Archivo DBF -
+                    {% else %}
+                        <h5>Formato del Archivo CSV -
+                    {% endif %} 
+                    {% if esclave  %}
+                        Claves</h5>
+                    {% else %}
+                         Profesionales</h5>
+                    {% endif %} 
+                    <br>                    
+                        <center>                            
+                            <a class="btn btn-secondary float-start shadow volver" href="#" onclick="history.back(); return false;">Cancelar</a>
+                            <button class="btn btn-lg btn-primary float-end shadow px-2">{{ button_label|default('Descargar') }}</button>
+                        </center>      
+                    <br> 
+                        <input type="hidden" value="{{esdbf}}" name="generodbf">   
+                        <input type="hidden" value="{{esclave}}" name="generoclave">
+                        <input type="hidden" value="{{fdesde}}" name="fdesdeh"> 
+                        <input type="hidden" value="{{circunscripcion}}" name="circunscripcion">  
+                        <input type="hidden" value="{{colegio}}" name="colegio">   
+                        <br>                     
+                    <br>                    
+                </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+    {% endif %} 
+{% endblock %}

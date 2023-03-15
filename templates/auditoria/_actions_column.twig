@@ -1,0 +1,76 @@
+{# ACTIVAR AUDITORIA #}
+{% if row.isAudited and row.isAuditable and not row.existTableAudit and not row.existTriggerAudit %}
+    <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+        formUrl: path('auditoria_activate', {tableName: row.tableName }), 
+        textConfirm: '¿Desea activar la Auditoría para la entidad "' ~ row.entidad ~ '"?',
+        icon: 'question',
+        confirmButtonText: 'Si, activar Auditoría!',
+        _method: 'POST',
+        _token: csrf_token('activate' ~ row.tableName) }) }}
+    >
+        <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title='Activar Auditoría para "{{row.entidad}}"'><i class="fa-brands fa-creative-commons-sampling-plus"></i></a>      
+    </div>
+{% endif %}
+
+{# PAUSAR AUDITORIA #}
+{% if row.existTableAudit and row.existTriggerAudit %}
+    <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+        formUrl: path('auditoria_pause', {tableName: row.tableName }), 
+        textConfirm: '¿Desea pausar la Auditoría para la entidad "' ~ row.entidad ~ '"?',
+        icon: 'question',
+        confirmButtonText: 'Si, pausar Auditoría!',
+        _method: 'POST',
+        _token: csrf_token('pause' ~ row.tableName) }) }}
+    >
+        <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title='Pausar Auditoría para "{{row.entidad}}"'><i class="fa-regular fa-circle-pause"></i></a>      
+    </div>
+{% endif %}
+
+{# REANUDAR AUDITORIA #}
+{% if row.isAuditable and row.existTableAudit and not row.existTriggerAudit %}
+    <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+        formUrl: path('auditoria_resume', {tableName: row.tableName }), 
+        textConfirm: '¿Desea reanudar la Auditoría para la entidad "' ~ row.entidad ~ '"?',
+        icon: 'question',
+        confirmButtonText: 'Si, reanudar Auditoría!',
+        _method: 'POST',
+        _token: csrf_token('resume' ~ row.tableName) }) }}
+    >
+        <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title='Reanudar Auditoría para "{{row.entidad}}"'><i class="fa-regular fa-circle-play"></i></a>      
+    </div>
+{% endif %}
+
+
+{# AYUDAS #}
+{% if row.isAudited is null %}
+    <div class="d-inline p-1" {{ stimulus_controller('message-form', {
+        textTitle: '¿Que sucede con "' ~ row.entidad ~ '"?',
+        textMessage: 'La entidad se encuentra dentro de la lista de las Entidades auditables. Ha sido definida en el archivo de configuración de la aplicación (<i>.env</i>).<br><br>Sin embargo no define las propiedades <b>lastUserAppId</b> y <b>storeId</b> con sus correspondientes <i>getters</i> y <i>setters</i>.<br><br><strong>' ~ row.entidad ~ '</strong> no puede ser auditada.',
+        }) }}
+    >
+        <a href="#" data-action="message-form#messageDialog" title='¿Qué está ocurriendo con "{{row.entidad}}"'><i class="fa-regular fa-circle-question"></i></a>
+    </div>
+{% endif %}
+{% if not row.isAudited and row.isAudited is not null %}
+    <div class="d-inline p-1" {{ stimulus_controller('message-form', {
+        textTitle: '¿Que sucede con "' ~ row.entidad ~ '"?',
+        textMessage: 'Si desea activar la auditoría para <b>' ~ row.entidad ~ '</b> debe definirla en la lista de Entidades auditables en su archivo de configuración a nivel de aplicación (<i>.env</i>) en la variable <i>ENTIDADES_A_AUDITAR</i>.<br><br><pre>Ej: ENTIDADES_A_AUDITAR="Circunscripcion, Colegio, ...."</pre><br>Tenga presente que deben estar definidas en la entidad las propiedades <b>lastUserAppId</b> y <b>storeId</b> con sus correspondientes <i>getters</i> y <i>setters</i>',
+        }) }}
+    >
+        <a href="#" data-action="message-form#messageDialog" title='¿Qué está ocurriendo con "{{row.entidad}}"'><i class="fa-regular fa-circle-question"></i></a>
+    </div>
+{% endif %}
+
+{# BORRAR AUDITORIA #}
+{% if row.isAudited and row.isAudited is not null and row.isAuditable and  row.existTableAudit and not row.existTriggerAudit %}
+    <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+        formUrl: path('auditoria_delete', {tableName: row.tableName }), 
+        textConfirm: '¿Desea borrar los Registros de Auditoría para la entidad "' ~ row.entidad ~ '"?',
+        icon: 'question',
+        confirmButtonText: 'Si, borrar Registros de Auditoría!',
+        _method: 'POST',
+        _token: csrf_token('delete' ~ row.tableName) }) }}
+    >
+        <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title='Borrar Auditoría para "{{row.entidad}}"'><i class="fa-regular fa-trash-can text-danger"></i></a>      
+    </div>
+{% endif %}

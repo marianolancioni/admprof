@@ -1,0 +1,71 @@
+{{ form_start(form) }}   
+
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form) }}
+</div>
+
+<div class="row">       
+    <div class="col-4">           
+          {{ form_row(form.matricula) }}        
+    </div>        
+    <div class="col-4">            
+            {{ form_row(form.apellido) }}        
+    </div>   
+    <div class="col-4">            
+        {{ form_row(form.nombre) }}        
+</div> 
+</div> 
+
+<div class="row">       
+    <div class="col-6">           
+          {{ form_row(form.tipoDocumento) }}        
+    </div>        
+    <div class="col-6">            
+            {{ form_row(form.numeroDocumento) }}        
+    </div>  
+</div> 
+
+<div class="row"> 
+    <div class="col-4">            
+        {{ form_row(form.estadoProfesional) }}        
+    </div> 
+    <div class="col-4">            
+        {{ form_row(form.desde) }}        
+    </div> 
+    <div class="col-4">            
+        {{ form_row(form.hasta) }}        
+    </div> 
+</div>
+
+<div class="row">       
+    <div class="col-6">           
+          {{ form_row(form.domicilio) }}        
+    </div>        
+    <div class="col-6">            
+            {{ form_row(form.localidad) }}        
+    </div>   
+</div> 
+
+<div class="row">       
+    <div class="col-6">           
+          {{ form_row(form.correo) }}        
+    </div>        
+    <div class="col-3">            
+            {{ form_row(form.telefono1) }}        
+    </div>   
+    <div class="col-3">            
+        {{ form_row(form.telefono2) }}        
+</div> 
+</div> 
+
+<div class="row">        
+    <div class="col-12">            
+        {{ form_row(form.observaciones) }}        
+    </div>    
+</div> 
+
+<hr>    
+    <button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>    
+    <button id="btnSave" class="btn btn-primary float-end shadow">{{ button_label|default('Grabar Cambios') }}</button> 
+
+{{ form_end(form) }}

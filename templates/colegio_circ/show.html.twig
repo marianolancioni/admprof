@@ -1,0 +1,58 @@
+<table class="table shadow">
+    <tbody>
+        <tr>
+            <th>Código:</th>
+            <td>{{ colegio_circ.id }}</td>
+        </tr>
+        <tr>
+            <th>Caracteres Permitidos:</th>
+            <td>{{ colegio_circ.caracteresPermitidos }}</td>
+        </tr>
+        <tr>
+            <th>Localidad:</th>
+            <td>{{ colegio_circ.localidad }}</td>
+        </tr>
+        <tr>
+            <th>Provincia:</th>
+            <td>{{ colegio_circ.provincia }}</td>
+        </tr>
+        <tr>
+            <th>Domicilio:</th>
+            <td>{{ colegio_circ.domicilio }}</td>
+        </tr>
+        <tr>
+            <th>Telefono:</th>
+            <td>{{ colegio_circ.telefono1 }}</td>
+        </tr>
+        <tr>
+            <th>Telefono Alternativo:</th>
+            <td>{{ colegio_circ.telefono2 }}</td>
+        </tr>
+        <tr>
+            <th>Correo:</th>
+            <td>{{ colegio_circ.correo }}</td>
+        </tr>
+        {#Para el campo Estado el FALSE or 0: Habilitado y el TRUE or 1: Deshabilitado#}
+        <tr>
+            <th>Estado:</th>
+            <td>
+                {% if colegio_circ.estado == true %}
+                    Deshabilitado
+                {% else %}
+                    Habilitado
+                {% endif %}
+            </td>
+        </tr>
+        {#Para el campo Visible el FALSE or 0: No Visible y el TRUE or 1: Visible#}
+        <tr>
+            <th>Visible:</th>
+            <td>
+                {% if colegio_circ.visible == true %}
+                    Si
+                {% else %}
+                    No
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>

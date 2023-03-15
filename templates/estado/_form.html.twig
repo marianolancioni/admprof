@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+    
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.estadoProfesional) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.estado) }}
+        </div>
+    </div>
+
+    <button id="btnSave" class="btn btn-primary float-end shadow">{{ button_label|default('Grabar Cambios') }}</button>
+    <button type="button" class="btn btn-secondary float-start" data-bs-dismiss="modal">Cancelar</button>
+    
+{{ form_end(form) }}

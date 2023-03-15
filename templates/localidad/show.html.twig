@@ -1,0 +1,31 @@
+    <table class="table shadow">
+        <tbody>
+            <tr>
+                <th>Código:</th>
+                <td>{{ localidad.id }}</td>
+            </tr>
+            <tr>
+                <th>Localidad:</th>
+                <td>{{ localidad.localidad }}</td>
+            </tr>
+            <tr>
+                <th>Código Postal:</th>
+                <td>{{ localidad.codigoPostal }}</td>
+            </tr>
+            <tr>
+                <th>Sub Código Postal:</th>
+                <td>{{ localidad.subCodigoPostal }}</td>
+            </tr>
+            {#Para el campo Estado el FALSE or 0: Habilitado y el TRUE or 1: Deshabilitado#}
+            <tr>
+                <th>Estado:</th>
+                <td>
+                    {% if localidad.estado == true %}
+                        1 - Deshabilitado
+                    {% else %}
+                        0 - Habilitado
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>

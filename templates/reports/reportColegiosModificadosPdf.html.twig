@@ -1,0 +1,58 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo el titulo del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {# Seteo el subtitulo del reporte con el colegio y la circunscripcion #}
+        {% block subsubtitulo %}
+          
+        {% endblock %}
+        {% block subsubsubtitulo %}
+        <h4> Desde: {{labelFechaDesde|date('d/m/Y') }}  Hasta: {{ labelFechaHasta|date('d/m/Y') }}  Emitido por: {{ app.user.getApellido()}}
+                {% if app.user.getNombre() %}
+                    {{ app.user.getNombre() }}
+                {% endif %}
+        </h4>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        {% if registros != null %}
+        <table class="table table-striped">
+            <thead class="table-bordered">
+                <tr>
+                    <th rowspan="3" class="apellido-nombre">Colegio</th>
+                    <th rowspan="3" class="text-center">Circunscripción</th>
+                    <th rowspan="3" class="text-center">Modificaciones</th>
+                    <th rowspan="3" class="text-center">Asignaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set totalModificaciones, totalAsignaciones = 0,0 %}
+                {% for registro in registros %}
+                    {% set totalModificaciones = totalModificaciones + registro[2] %}
+                    {% set totalAsignaciones = totalAsignaciones + registro[3] %}
+                    <tr class="no-gutters">                        
+                        <td class="text-center">{{ registro[0] }}</td>
+                        <td class="text-center">{{ registro[1] }}</td>
+                        <td class="text-center">{{ registro[2] }}</td>
+                        <td class="text-center">{{ registro[3] }}</td>                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4>Total de Colegios Listados: {{registros | length}}</h4>
+        <h4>Total de Modificaciones: {{totalModificaciones}}</h4>
+        <h4>Total de Asignaciones: {{totalAsignaciones}}</h4>
+        {% else %}
+            <p>No se encuentran colegios con profesionales modificados desde la fecha seleccionada.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

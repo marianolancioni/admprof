@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <br><br>
+
+    {% if   is_granted('IS_AUTHENTICATED_FULLY') %}
+      <div class="card border-danger mb-3 shadow">
+        <div class="card-header text-danger"><strong>Ups! Ocurrió un error</strong></div>
+        <div class="card-body text-danger">
+          <h5 class="card-title">Algo no funciono como se esperaba</h5>
+          <p class="card-text">Háganos saber qué estaba haciendo cuando se produjo este error. Lo arreglaremos lo más pronto posible.</p>
+          <p  class="card-text">Pedimos disculpas por cualquier inconveniente causado.</p>
+        </div>
+        <div class="card-footer text-right text-secondary"><small>{{ "now"|date("d/m/Y H:i:s") }} - Error desconocido</small></div>
+      </div>
+    {% else %}
+      <div class="card border-danger mb-3 shadow">
+        <div class="card-body text-danger">
+          <h5 class="card-title">No fue posible finalizar la operación</h5>
+          <p class="card-text">Por favor vuelva a intentarlo en un rato. Pedimos disculpas por cualquier inconveniente causado.</p>
+        </div>
+        <div class="card-footer text-right text-secondary"><small>{{ "now"|date("d/m/Y H:i:s") }} - Error</small></div>
+      </div>
+    {% endif %}
+{% endblock %}
+
+{# En caso de error y de encontrarse autenticado el usuario se dispara correo de notificación. Solo para ambiente productivo #}
+{% block javascripts %}
+  {% if app.environment == 'prod' and is_granted('IS_AUTHENTICATED_FULLY') %}
+    {{ parent() }}
+    <script>
+      $(function () {
+        $.ajax({
+          url: "{{ path('app_error_notification') }}",
+          method: 'POST',
+          data: { errorCode: {{ exception.statusCode }}, 
+                  message: '{{ exception.message }}', 
+                  statusText: '{{ exception.statusText }}', 
+                  previus: '{{exception.previous }}', 
+                  file: '{{exception.file }}', 
+                  line: '{{exception.line}}', 
+                  traceMessage: '{{exception.traceAsString|e('js')}}' }
+        })        
+      });
+    </script>
+  {% endif %}
+{% endblock %}

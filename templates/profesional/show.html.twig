@@ -1,0 +1,77 @@
+    <table class="table shadow">
+        <tbody>
+            <tr>
+                <th>Matrícula:</th>
+                <td>{{ profesional.matricula }}</td>
+            </tr>
+            <tr>
+                <th>Apellido:</th>
+                <td>{{ profesional.apellido }}</td>
+            </tr>
+            <tr>
+                <th>Nombre:</th>
+                <td>{{ profesional.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Número Documento:</th>
+                <td>{{ profesional.numeroDocumento }}</td>
+            </tr>
+            <tr>
+                <th>Domicilio:</th>
+                <td>{{ profesional.domicilio }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono:</th>
+                <td>{{ profesional.telefono1 }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono alternativo:</th>
+                <td>{{ profesional.telefono2 }}</td>
+            </tr>
+            <tr>
+                <th>Correo:</th>
+                <td>{{ profesional.correo }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones:</th>
+                <td>{{ profesional.observaciones }}</td>
+            </tr>
+            <tr>
+                <th>Estado:</th>
+                <td>{{ profesional.estadoProfesional }}</td>
+            </tr>
+            <tr>
+                <th>Fecha Desde Estado:</th>
+                <td>{{ profesional.desde ? profesional.desde|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fecha Hasta Estado:</th>
+                <td>{{ profesional.hasta ? profesional.hasta|date('d/m/Y') : '' }}</td>
+            </tr>
+            {#Para el campo Estado  0: ACTIVO y 1: ELIMINADO#}
+             {% if is_granted('ROLE_ADMIN')%}
+                <tr>
+                    <th>Eliminado/Activo:</th>
+                    <td>
+                        {% if profesional.estado == 0 %}
+                            Activo
+                        {% else %}
+                            Eliminado
+                        {% endif %}
+                    </td>
+                </tr>
+             {% endif %}
+            <tr>
+                <th>Fecha Alta:</th>
+                <td>{{ profesional.fechaAlta ? profesional.fechaAlta|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fecha Actualizacion:</th>
+                <td>{{ profesional.fechaActualizacion ? profesional.fechaActualizacion|date('d/m/Y H:i:s') ~ ' hs.' : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fecha Asignación de clave:</th>
+                <td>{{ profesional.fechaClave ? profesional.fechaClave|date('d/m/Y H:i:s') ~ ' hs.' : '<i style="color:gray;font-size: -1;>">Clave asignada previamente a la puesta en marcha de este Sistema</i>' }}</td>
+            </tr>
+        </tbody>
+    </table>

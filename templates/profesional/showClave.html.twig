@@ -1,0 +1,6 @@
+    {#<p><b>CLAVE: {{profesionalService.encrypt_decrypt('decrypt', claveEncrip)}}</b></p>#}
+    {% if claveEncrip == null %}
+    <p><b>NO POSEE</b></p>
+    {% else %}
+    <p><b>CLAVE: {{profesionalService.encrypt_decrypt('decrypt', claveEncrip)}}</b></p>
+    {% endif %}

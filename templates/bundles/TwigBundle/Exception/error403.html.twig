@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <br><br>
+
+    {% if   is_granted('IS_AUTHENTICATED_FULLY') %}
+      <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div class="card border-danger mb-3 shadow">
+              <div class="card-header text-danger"><strong>Acceso no permitido</strong></div>
+              <div class="card-body text-danger">
+                <h5 class="card-title text-center">Usted no tiene suficientes privilegios para realizar esta operación.</h5>
+              </div>
+            </div>
+          </div>
+    </div>
+    {% else %}
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <div class="card border-danger mb-3 shadow">
+          <div class="card-header text-danger"><strong>Acceso no permitido</strong></div>
+          <div class="card-body text-danger">
+            <h5 class="card-title text-center">Usted no tiene suficientes privilegios para realizar esta operación.</h5>
+          </div>
+        </div>
+      </div>
+  {% endif %}
+{% endblock %}
+
+{# En caso de error y de encontrarse autenticado el usuario se dispara correo de notificación. Solo para ambiente productivo #}
+{% block javascripts %}
+  {% if app.environment == 'prod' and is_granted('IS_AUTHENTICATED_FULLY') %}
+    {{ parent() }}
+    <script>
+      $(function () {
+        $.ajax({
+          url: "{{ path('app_error_notification') }}",
+          method: 'POST',
+          data: { errorCode: {{ exception.statusCode }}, 
+                  message: '{{ exception.message }}', 
+                  statusText: '{{ exception.statusText }}', 
+                  previus: '{{exception.previous }}', 
+                  file: '{{exception.file }}', 
+                  line: '{{exception.line}}', 
+                  traceMessage: '{{exception.traceAsString|e('js')}}' }
+        })        
+      });
+    </script>
+  {% endif %}
+{% endblock %}

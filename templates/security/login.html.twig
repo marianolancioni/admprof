@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+
+	<style>
+		span {
+			cursor: pointer;
+		}
+	</style>
+
+    <form method="post">
+        
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+            <div class="container h-100">
+                <div class="row align-items-center h-100">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Primer paso para ingresar al sistema</h5>
+                            <p>Por favor, ingrese sus credenciales</p>
+                            <form class="form" method="post">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="inputUsername">Usuario</label>
+                                        <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
+                                    </div>
+                                    <div class="col">                                       
+                                            <label for="inputPassword">Contraseña</label>
+                                            <div class="input-group align-items-center">
+                                                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>   
+                                                <span id="show-hide-passwd" action="hide" class="fas fa-eye d-inline p-2">  </span>                                                   
+                                            </div>                                                        
+                                    </div>
+                                <input type="hidden" name="_csrf_token"
+                                    value="{{ csrf_token('authenticate') }}"
+                                >
+                                </div>
+                                <p></p>
+                                <button class="btn btn-lg btn-primary float-end shadow px-2" type="submit">Ingresar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}	
+	<script>
+		$(function () {
+			$('#show-hide-passwd').on('click', function(e) {
+				e.preventDefault();
+				var current = $(this).attr('action');
+				if (current == 'hide') {
+					$(this).prev().attr('type','text');
+					$(this).removeClass('fas fa-eye').addClass('fas fa-eye-slash').attr('action','show');  
+				}
+				if (current == 'show') {
+					$(this).prev().attr('type','password');
+                    $(this).removeClass('fas fa-eye-slash').addClass('fas fa-eye').attr('action','hide');                  
+				}
+			})
+		})
+	</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo el titulo del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {# Seteo el subtitulo del reporte con el colegio y la circunscripcion #}
+        {% block subsubtitulo %}
+           <p>Colegio:  {{ labelColegio }} </p>
+           <p>Circunscripción:  {{ labelCircu }} </p>   
+        {% endblock %}
+        {% block subsubsubtitulo %}
+            <h4 class="alinearizq"> Desde: {{labelFechaDesde|date('d/m/Y') }} Hasta: {{ labelFechaHasta|date('d/m/Y') }}</h4>        
+            <h4 class="alinearder">
+                Emitido por: {{ app.user.getApellido()}}
+                    {% if app.user.getNombre() %}
+                        {{ app.user.getNombre() }}
+                    {% endif %}
+            </h4>
+            <div style="clear: both;"></div>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        {% if profesionales != null %}
+        <table class="table table-striped">
+            <thead class="table-bordered">
+                <tr>
+                    <th rowspan="2" class="apellido-nombre">Apellido y Nombre</th>
+                    <th rowspan="2" class="text-center">Matricula</th>
+                    <th rowspan="2" class="text-center">Fecha Alta</th>
+                    <th rowspan="2" class="text-center">Fecha Última Actualización</th>
+                    <th rowspan="2" class="text-center">Estado</th>
+                    <th rowspan="2" class="text-center">Fecha Desde (Estado)</th>
+                    <th rowspan="2" class="text-center">Fecha Hasta (Estado)</th>
+                    <th rowspan="2" class="text-center">Activo / Eliminado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profesional in profesionales %}
+                    <tr class="no-gutters">
+                        <td class="apellido-nombre" nowrap>{{ profesional.apellido ~ ', '  ~ profesional.nombre }}</td>
+                        <td class="text-center">{{ profesional.matricula }}</td>
+                        <td class="text-center">{{ profesional.fechaAlta ? profesional.fechaAlta|date('d/m/y') : ''  }}</td>
+                        <td class="text-center" nowrap>{{ profesional.fechaActualizacion ? profesional.fechaActualizacion|date('d/m/y H:i'): ''  }}</td>
+                        <td class="text-center">{{ profesional.estadoProfesional }}</td>
+                        <td class="text-center">{{ profesional.desde ? profesional.desde|date('d/m/y') : ''  }}</td>
+                        <td class="text-center">{{ profesional.hasta ? profesional.hasta|date('d/m/y') : ''  }}</td>
+                        <td>
+                            {% if profesional.estado == 0 %}
+                                Activo
+                            {% else %}
+                                Eliminado
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4>Total de Profesionales Modificados: {{profesionales | length}}</h4>
+        {% else %}
+            <p>No se encuentran profesionales modificados para el rango de fechas seleccionado.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+

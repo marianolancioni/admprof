@@ -1,0 +1,93 @@
+{# VER #}
+<div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('usuario_show', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+    <a data-action="modal-form#openModal" href="#" title="Ver ficha de {{row.username}}"><i class="fas fa-eye"></i></a>
+
+    {{ include('components/_modal.html.twig', {
+        modalTitle: 'Usuario: ' ~ row.apellido ~ ', ' ~ row.nombre,
+    }) }}					
+</div>
+
+{# EDITAR #}
+{% if is_granted('ROLE_SUPER_ADMIN') %} 
+    {% if row.fechaBaja is null %}
+        <div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('usuario_edit', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+            <a data-action="modal-form#openModal" href="#" title="Editar a {{row.username}}"><i class="fas fa-pen"></i></a>
+
+            {{ include('components/_modal.html.twig', {
+                modalTitle: 'Usuario: ' ~ row.apellido ~ ', ' ~ row.nombre,
+            }) }}					
+        </div>
+    {% endif %}
+{% endif %}
+
+<div class="float-end ms-2">
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %} 
+        {% if row.fechaBaja is null %}
+            {# Password #}
+            <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                formUrl: path('usuario_reset_password', {id: row.id }), 
+                textConfirm: '¿Desea generar una nueva contraseña para el usuario "' ~ row.username ~ '"?',
+                icon: 'question',
+                confirmButtonText: 'Si, generar nueva Contraseña!',
+                _method: 'POST',
+                _token: csrf_token('undelete' ~ row.id) }) }} 
+            >
+                <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Nuevo Password para {{row.username}}"><i class="fa fa-arrow-rotate-right"></i></a>      
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {# Suplantar Identidad #}
+    {% if is_granted('ROLE_SUPER_ADMIN') %} 
+        {% if row.fechaBaja is null %}
+            <div class="d-inline p-1">
+                <a href="{{ path('app_profesional_index', {_switch_user: row.username}) }}" title="Adquirir privilegios de {{row.username}}"><i class="fas fa-user-secret text-dark"></i></a>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    {# Reset Trusted Device - Vuelve a Solicitar ingreso de código 2FA #}
+    {% if is_granted('ROLE_SUPER_ADMIN') %} 
+        <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+            formUrl: path('usuario_trust_version', {id: row.id }), 
+            textConfirm: '¿Volver a solicitar al usuario "' ~ row.username ~ ' un pin para autenticación de doble factor"?',
+            message: 'Si procede, se le solicitará al usuario un pin de ingreso la próxima vez que ingrese al Sistema.',
+            icon: 'warning',
+            confirmButtonText: 'Si, proceder!',
+            _method: 'POST',
+            _token: csrf_token('trust' ~ row.id) }) }} 
+        >
+        <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Volver a solicitar pin de autenticación de 2FA a {{row.username}}"><i class="fa-solid fa-triangle-exclamation text-warning"></i></a>
+    {% endif %}
+
+    {# BORRAR #}
+    {% if is_granted('ROLE_SUPER_ADMIN') %} 
+        {% if row.fechaBaja is null %}
+            <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                        formUrl: path('usuario_delete', {id: row.id }), 
+                        textConfirm: '¿Confirma la eliminación del usuario "' ~ row.username ~ '"?',
+                        message: 'Esta acción no podrá ser revertida!',
+                        icon: 'warning',
+                        confirmButtonText: 'Si, proceder con la eliminación!',
+                        _method: 'DELETE',
+                        _token: csrf_token('delete' ~ row.id) }) }} 
+                    >
+                <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Dar de baja a {{row.username}}"><i class="fa-solid fa-trash-can text-danger"></i></a>      
+            </div>
+        {% else %}
+            {# RE ACTIVAR #}
+            <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                        formUrl: path('usuario_undelete', {id: row.id }), 
+                        textConfirm: '¿Re Activa al usuario "' ~ row.username ~ '"?',
+                        icon: 'question',
+                        confirmButtonText: 'Si, reactivar!',
+                        _method: 'POST',
+                        _token: csrf_token('undelete' ~ row.id) }) }} 
+                    >
+                <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Re Activar a{{row.username}}"> <i class="fa-solid fa-trash-arrow-up text-success"></i></a>      
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>

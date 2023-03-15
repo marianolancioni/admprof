@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administración de Profesionales{% endblock %}
+
+{% block body %}
+
+{% if not (is_granted('IS_AUTHENTICATED_FULLY')) %}
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-18">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Administración de Profesionales</h5>
+                        <div class="card-text">
+                            <p>Bienvenido al sistema de Administración de Profesionales para los Colegios desarrollado por el Poder Judicial de Santa Fe.</p>
+                            <p>Por consultas comunicarse al correo: informatica@justiciasantafe.gov.ar</p>
+                        </div>
+                        <p><a href="{{ path('app_login') }}" class="btn btn-lg btn-primary">Ingresar</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

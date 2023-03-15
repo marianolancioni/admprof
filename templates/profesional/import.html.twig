@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Importación de Profesionales desde IOL{% endblock %}
+
+{% block body %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_ADMIN') %} 
+    <div class="d-flex aligns-items-center justify-content-center" style="height:80vh">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Importación de Profesionales desde IOL</h5>
+
+                        <p>Se importarán los datos con los siguientes filtros:</p>
+
+                        <form method="post" action="{{ path('app_profesional_import') }}">
+                        
+                                <label for="cboCircunscripcion" id="lblCircunscripcion">Seleccione una Circunscripción:</label><br>
+                                <select class="form-control" id="cboCircunscripcion" name="circunscripcion">
+                                    <option value="0" {{ (circunscripcionId == 0) ? 'selected' : '' }}>TODAS</option>
+                                    {% for circunscripcion in  circunscripciones %}
+                                        <option value="{{circunscripcion.id}}" {{ (circunscripcion.id == circunscripcionId) ? 'selected' : '' }}>{{circunscripcion.circunscripcion}}</option>
+                                    {% endfor %}
+                                </select>
+                                <br> 
+                                <label for="cboColegio" id="lblColegio">Seleccione un Colegio:</label><br>
+                                <select class="form-control" id="cboColegio" name="colegio">
+                                    {% for colegio in  colegios %}
+                                        <option value="{{colegio.id}}" {{ (colegio.id == colegioId) ? 'selected' : '' }}>{{colegio.colegio}}</option>
+                                    {% endfor %}
+                                    <option value="99" {{ (colegioId == 99) ? 'selected' : '' }}>TODOS</option>       
+                                </select>                 
+                                <br> 
+                            {% if not procesados %}
+                                <p class="text-danger text-center">Se eliminarán todos los Profesionales del Colegio y Circunscripción seleccionado y se importarán los datos actualizados desde IOL.</p>
+                                <p class="bg-danger text-white text-center border shadow ms-5 me-5 mb-5">Verifique antes de Confirmar!</p>
+                                <a class="btn btn-secondary float-left shadow volver" href="#" onclick="history.back(); return false;">Cancelar</a>
+                                <button class="btn btn btn-danger float-end shadow px-2">{{ button_label|default('Importar') }}</button>
+                            {% else %}
+                                <a class="btn btn-secondary float-left shadow volver" href="#" onclick="history.back(); return false;">Volver</a>
+                            {% endif %}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+    {% endif %} 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){            
+            $('#cboCircunscripcion').focus();
+        }); 
+    </script>  
+    
+{% endblock %}   

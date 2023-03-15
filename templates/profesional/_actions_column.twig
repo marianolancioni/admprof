@@ -1,0 +1,82 @@
+{# VER #}
+<div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('app_profesional_show', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+    <a data-action="modal-form#openModal" href="#" title="Ver ficha de {{row.apellido ~ ', ' ~ row.nombre}}"><i class="fas fa-eye"></i></a>
+
+    {{ include('components/_modal.html.twig', {
+        modalTitle: row.apellido ~ ', ' ~ row.nombre,
+    }) }}					
+</div>
+
+{# EDITAR #}
+{% if is_granted('ROLE_EDITOR') %}
+    {% if row.estado == 0 %}
+        <div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('app_profesional_edit', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+            <a data-action="modal-form#openModal" href="#" title="Editar a {{row.apellido ~ ', ' ~ row.nombre}}"><i class="fas fa-pen"></i></a>
+
+            {{ include('components/_modal.html.twig', {
+                modalTitle: row.apellido ~ ', ' ~ row.nombre,
+            }) }}					
+        </div>
+    {% endif %}
+{% endif %}
+
+{#ASIGNA CLAVE A PROFESIONAL#}
+{% if is_granted('ROLE_EDITOR') %}
+    {% if row.estado == 0 %}
+        <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+            formUrl: path('asigna_clave_profesional', {id: row.id }), 
+            textConfirm: '¿Desea generar una nueva clave para el profesional "' ~ row.apellido ~ ', ' ~ row.nombre ~ '. <br> Matrícula: ' ~ row.matricula ~'"?',
+            icon: 'question',
+            confirmButtonText: 'Si, generar nueva Clave!',
+            _method: 'POST',
+            _token: csrf_token('undelete' ~ row.id) }) }} 
+        >
+            <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Nueva Clave para {{row.apellido ~ ', ' ~ row.nombre}}"><i class="fa-solid fa-key"></i></a>      
+        </div>
+    {% endif %}
+{% endif %}
+
+<div class="float-end ms-2">
+{# BORRAR #}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {% if row.estado == 0 %}
+            <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                        formUrl: path('app_profesional_delete', {id: row.id }), 
+                        textConfirm: '¿Confirma la eliminación del profesional "' ~ row.apellido ~ ', ' ~ row.nombre ~ '"?',
+                        message: 'Esta acción podrá ser revertida!',
+                        icon: 'warning',
+                        confirmButtonText: 'Si, proceder con la eliminación!',
+                        _method: 'DELETE',
+                        _token: csrf_token('delete' ~ row.id) }) }} 
+                    >
+                <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Dar de baja a {{row.apellido ~ ', ' ~ row.nombre}}"><i class="fa-solid fa-trash-can text-danger"></i></a>      
+            </div>
+        {% else %}
+            {# RE ACTIVAR #}
+            <div class="d-inline p-1" {{ stimulus_controller('confirm-form', {
+                        formUrl: path('profesional_undelete', {id: row.id }), 
+                        textConfirm: '¿Re Activa al profesional "' ~ row.apellido ~ ', ' ~ row.nombre ~ '"?',
+                        icon: 'question',
+                        confirmButtonText: 'Si, reactivar!',
+                        _method: 'POST',
+                        _token: csrf_token('undelete' ~ row.id) }) }} 
+                    >
+                <a href="#" data-action="confirm-form#deleteUndeleteConfirm" title="Re Activar a{{row.apellido ~ ', ' ~ row.nombre}}"> <i class="fa-solid fa-trash-arrow-up text-success"></i></a>      
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {# VER CLAVE #}
+    {% if is_granted('ROLE_SUPER_ADMIN') %} 
+  <div class="d-inline p-1" {{ stimulus_controller('modal-form', {formUrl: path('app_profesional_showClave', {id: row.id } ) }) }} data-action="hidden.bs.modal->modal-form#modalHidden">
+    <a data-action="modal-form#openModal" href="#" title="Ver Clave de {{row.apellido ~ ', ' ~ row.nombre}}"><i class="fa-solid fa-question"></i></a>
+
+    {{ include('components/_modalShowClave.html.twig', {
+        modalTitle: row.apellido ~ ', ' ~ row.nombre,
+    }) }}					
+</div>
+
+    {% endif %} 
+
+</div>
+

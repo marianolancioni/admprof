@@ -1,0 +1,59 @@
+{% extends 'reports/basePdfList.html.twig' %}
+
+    {% block body %}
+
+        {# Seteo los titulos del reporte #}
+        {% block titulo %}
+            {{ labelTitulo }}
+        {% endblock %}
+        
+        {% block subtitulo %}
+            {{ labelSubtitutlo }}
+        {% endblock %}
+        
+        {% block subsubtitulo %}
+            {{ labelSubsubtitulo }}
+        {% endblock %}
+
+        {% block subsubsubtitulo %}
+            <h4 class="alinearizq"> Desde: {{labelFechaDesde|date('d/m/Y') }} Hasta: {{ labelFechaHasta|date('d/m/Y') }}</h4>        
+            <h4 class="alinearder">
+                Emitido por: {{ app.user.getApellido()}}
+                    {% if app.user.getNombre() %}
+                        {{ app.user.getNombre() }}
+                    {% endif %}
+            </h4>
+            <div style="clear: both;"></div>
+        {% endblock %}
+
+        {# Armo el contenido del reporte #}
+        {% block contenido %}
+        
+        {% if profesionales != null %}
+            <table class="table table-stripedpdf">
+                <thead class="table-bordered">
+                    <tr>
+                        <th rowspan="2" class="apellido-nombre">Apellido y Nombre</th>
+                        <th rowspan="2" class="text-center">Matrícula</th>
+                        <th rowspan="2" class="text-center">Fecha Alta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profesional in profesionales %}
+                        <tr class="no-gutters">
+                            <td class="apellido-nombre" nowrap>{{ profesional.apellido ~ ', '  ~ profesional.nombre }}</td>
+                            <td class="text-center">{{ profesional.matricula }}</td>
+                            <td class="text-center">{{ profesional.fechaAlta ? profesional.fechaAlta|date('d/m/Y') : ''  }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h4>Total de Matrículas Creadas: {{profesionales | length}}</h4>
+        {% else %}
+            <p>No se encuentran matrículas dadas de alta para el rango de fechas seleccionado.</p>
+        {% endif %}
+
+        {% endblock %}
+
+    {% endblock %}
+
